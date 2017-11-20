@@ -1,5 +1,6 @@
 package com.atguigu.springdata.test;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,11 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.sql.DataSource;
 
 import org.junit.Test;
@@ -55,11 +52,10 @@ public class SpringDataTest {
     }
 
     /**
-     * Ä¿±ê: ÊµÏÖ´ø²éÑ¯Ìõ¼şµÄ·ÖÒ³. id > 5 µÄÌõ¼ş
-     * 
-     * µ÷ÓÃ JpaSpecificationExecutor µÄ Page<T> findAll(Specification<T> spec, Pageable pageable);
-     * Specification: ·â×°ÁË JPA Criteria ²éÑ¯µÄ²éÑ¯Ìõ¼ş
-     * Pageable: ·â×°ÁËÇëÇó·ÖÒ³µÄĞÅÏ¢: ÀıÈç pageNo, pageSize, Sort
+     * ç›®æ ‡: å®ç°å¸¦æŸ¥è¯¢æ¡ä»¶çš„åˆ†é¡µ. id > 5 çš„æ¡ä»¶
+     *
+     * è°ƒç”¨ JpaSpecificationExecutor çš„ Page<T> findAll(Specification<T> spec, Pageable pageable);
+     * Specification: å°è£…äº† JPA Criteria æŸ¥è¯¢çš„æŸ¥è¯¢æ¡ä»¶ Pageable: å°è£…äº†è¯·æ±‚åˆ†é¡µçš„ä¿¡æ¯: ä¾‹å¦‚ pageNo, pageSize, Sort
      */
     @Test
     public void testJpaSpecificationExecutor() {
@@ -67,14 +63,14 @@ public class SpringDataTest {
         int pageSize = 5;
         PageRequest pageable = new PageRequest(pageNo, pageSize);
 
-        //Í¨³£Ê¹ÓÃ Specification µÄÄäÃûÄÚ²¿Àà
+        // é€šå¸¸ä½¿ç”¨ Specification çš„åŒ¿åå†…éƒ¨ç±»
         Specification<Person> specification = new Specification<Person>() {
             /**
-             * @param *root: ´ú±í²éÑ¯µÄÊµÌåÀà. 
-             * @param query: ¿ÉÒÔ´ÓÖĞ¿Éµ½ Root ¶ÔÏó, ¼´¸æÖª JPA Criteria ²éÑ¯Òª²éÑ¯ÄÄÒ»¸öÊµÌåÀà. »¹¿ÉÒÔ
-             * À´Ìí¼Ó²éÑ¯Ìõ¼ş, »¹¿ÉÒÔ½áºÏ EntityManager ¶ÔÏóµÃµ½×îÖÕ²éÑ¯µÄ TypedQuery ¶ÔÏó. 
-             * @param *cb: CriteriaBuilder ¶ÔÏó. ÓÃÓÚ´´½¨ Criteria Ïà¹Ø¶ÔÏóµÄ¹¤³§. µ±È»¿ÉÒÔ´ÓÖĞ»ñÈ¡µ½ Predicate ¶ÔÏó
-             * @return: *Predicate ÀàĞÍ, ´ú±íÒ»¸ö²éÑ¯Ìõ¼ş. 
+             * @param *root: ä»£è¡¨æŸ¥è¯¢çš„å®ä½“ç±».
+             * @param query: å¯ä»¥ä»ä¸­å¯åˆ° Root å¯¹è±¡, å³å‘ŠçŸ¥ JPA Criteria æŸ¥è¯¢è¦æŸ¥è¯¢å“ªä¸€ä¸ªå®ä½“ç±». è¿˜å¯ä»¥ æ¥æ·»åŠ æŸ¥è¯¢æ¡ä»¶, è¿˜å¯ä»¥ç»“åˆ
+             *        EntityManager å¯¹è±¡å¾—åˆ°æœ€ç»ˆæŸ¥è¯¢çš„ TypedQuery å¯¹è±¡.
+             * @param *cb: CriteriaBuilder å¯¹è±¡. ç”¨äºåˆ›å»º Criteria ç›¸å…³å¯¹è±¡çš„å·¥å‚. å½“ç„¶å¯ä»¥ä»ä¸­è·å–åˆ° Predicate å¯¹è±¡
+             * @return: *Predicate ç±»å‹, ä»£è¡¨ä¸€ä¸ªæŸ¥è¯¢æ¡ä»¶.
              */
             @Override
             public Predicate toPredicate(Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -86,11 +82,11 @@ public class SpringDataTest {
 
         Page<Person> page = personRepsotory.findAll(specification, pageable);
 
-        System.out.println("×Ü¼ÇÂ¼Êı: " + page.getTotalElements());
-        System.out.println("µ±Ç°µÚ¼¸Ò³: " + (page.getNumber() + 1));
-        System.out.println("×ÜÒ³Êı: " + page.getTotalPages());
-        System.out.println("µ±Ç°Ò³ÃæµÄ List: " + page.getContent());
-        System.out.println("µ±Ç°Ò³ÃæµÄ¼ÇÂ¼Êı: " + page.getNumberOfElements());
+        System.out.println("æ€»è®°å½•æ•°: " + page.getTotalElements());
+        System.out.println("å½“å‰ç¬¬å‡ é¡µ: " + (page.getNumber() + 1));
+        System.out.println("æ€»é¡µæ•°: " + page.getTotalPages());
+        System.out.println("å½“å‰é¡µé¢çš„ List: " + page.getContent());
+        System.out.println("å½“å‰é¡µé¢çš„è®°å½•æ•°: " + page.getNumberOfElements());
     }
 
     @Test
@@ -108,12 +104,12 @@ public class SpringDataTest {
 
     @Test
     public void testPagingAndSortingRespository() {
-        //pageNo ´Ó 0 ¿ªÊ¼. 
+        // pageNo ä» 0 å¼€å§‹.
         int pageNo = 6 - 1;
         int pageSize = 5;
-        //Pageable ½Ó¿ÚÍ¨³£Ê¹ÓÃµÄÆä PageRequest ÊµÏÖÀà. ÆäÖĞ·â×°ÁËĞèÒª·ÖÒ³µÄĞÅÏ¢
-        //ÅÅĞòÏà¹ØµÄ. Sort ·â×°ÁËÅÅĞòµÄĞÅÏ¢
-        //Order ÊÇ¾ßÌåÕë¶ÔÓÚÄ³Ò»¸öÊôĞÔ½øĞĞÉıĞò»¹ÊÇ½µĞò. 
+        // Pageable æ¥å£é€šå¸¸ä½¿ç”¨çš„å…¶ PageRequest å®ç°ç±». å…¶ä¸­å°è£…äº†éœ€è¦åˆ†é¡µçš„ä¿¡æ¯
+        // æ’åºç›¸å…³çš„. Sort å°è£…äº†æ’åºçš„ä¿¡æ¯
+        // Order æ˜¯å…·ä½“é’ˆå¯¹äºæŸä¸€ä¸ªå±æ€§è¿›è¡Œå‡åºè¿˜æ˜¯é™åº.
         Order order1 = new Order(Direction.DESC, "id");
         Order order2 = new Order(Direction.ASC, "email");
         Sort sort = new Sort(order1, order2);
@@ -121,11 +117,11 @@ public class SpringDataTest {
         PageRequest pageable = new PageRequest(pageNo, pageSize, sort);
         Page<Person> page = personRepsotory.findAll(pageable);
 
-        System.out.println("×Ü¼ÇÂ¼Êı: " + page.getTotalElements());
-        System.out.println("µ±Ç°µÚ¼¸Ò³: " + (page.getNumber() + 1));
-        System.out.println("×ÜÒ³Êı: " + page.getTotalPages());
-        System.out.println("µ±Ç°Ò³ÃæµÄ List: " + page.getContent());
-        System.out.println("µ±Ç°Ò³ÃæµÄ¼ÇÂ¼Êı: " + page.getNumberOfElements());
+        System.out.println("æ€»è®°å½•æ•°: " + page.getTotalElements());
+        System.out.println("å½“å‰ç¬¬å‡ é¡µ: " + (page.getNumber() + 1));
+        System.out.println("æ€»é¡µæ•°: " + page.getTotalPages());
+        System.out.println("å½“å‰é¡µé¢çš„ List: " + page.getContent());
+        System.out.println("å½“å‰é¡µé¢çš„è®°å½•æ•°: " + page.getNumberOfElements());
     }
 
     @Test
@@ -147,7 +143,7 @@ public class SpringDataTest {
 
     @Test
     public void testModifying() {
-        //		personRepsotory.updatePersonEmail(1, "mmmm@atguigu.com");
+        // personRepsotory.updatePersonEmail(1, "mmmm@atguigu.com");
         personService.updatePersonEmail("mmmm@atguigu.com", 1);
     }
 
@@ -159,11 +155,11 @@ public class SpringDataTest {
 
     @Test
     public void testQueryAnnotationLikeParam() {
-        //		List<Person> persons = personRepsotory.testQueryAnnotationLikeParam("%A%", "%bb%");
-        //		System.out.println(persons.size());
+        // List<Person> persons = personRepsotory.testQueryAnnotationLikeParam("%A%", "%bb%");
+        // System.out.println(persons.size());
 
-        //		List<Person> persons = personRepsotory.testQueryAnnotationLikeParam("A", "bb");
-        //		System.out.println(persons.size());
+        // List<Person> persons = personRepsotory.testQueryAnnotationLikeParam("A", "bb");
+        // System.out.println(persons.size());
 
         List<Person> persons = personRepsotory.testQueryAnnotationLikeParam2("bb", "A");
         System.out.println(persons.size());
@@ -207,7 +203,8 @@ public class SpringDataTest {
     }
 
     @Test
-    public void testHelloWorldSpringData() throws IOException, InstantiationException, IllegalAccessException {
+    public void testHelloWorldSpringData()
+            throws FileNotFoundException, IOException, InstantiationException, IllegalAccessException {
         System.out.println(personRepsotory.getClass().getName());
 
         Person person = personRepsotory.getByLastName("AA");
