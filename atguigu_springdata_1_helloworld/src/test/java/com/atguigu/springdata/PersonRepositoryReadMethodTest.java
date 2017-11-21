@@ -58,6 +58,12 @@ public class PersonRepositoryReadMethodTest extends BasePersonRepositoryTest {
     }
 
     @Test
+    public void testQueryAnnotationLikeParam2() {
+        List<Person> personList = personRepository.testQueryAnnotationLikeParam2("D@qq", "F");
+        System.out.println(personList);
+    }
+
+    @Test
     public void getTotalCount() {
         BigInteger totalCount = personRepository.getTotalCount();
         System.out.println(totalCount);

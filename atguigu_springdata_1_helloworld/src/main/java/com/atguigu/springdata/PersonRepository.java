@@ -81,15 +81,14 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     /**
      * SpringData 允许在占位符上添加 %%.
-     *
-     * 我测试的时候会报错，不知道是为什么？？？？？？？？？？？？？？？？？
+     * 注意：这需要较高版本的 spring-data-jpa & spring-data-commons 才能支持！！
      *
      * @param email
      * @param lastName
      * @return
      */
-    /*@Query("SELECT p FROM Person p WHERE p.lastName LIKE %:lastName% OR p.email LIKE %:email%")
-    List<Person> testQueryAnnotationLikeParam2(@Param("email") String email, @Param("lastName") String lastName);*/
+    @Query("SELECT p FROM Person p WHERE p.lastName LIKE %:lastName% OR p.email LIKE %:email%")
+    List<Person> testQueryAnnotationLikeParam2(@Param("email") String email, @Param("lastName") String lastName);
 
     /**
      * 设置 nativeQuery=true 即可以使用原生的 SQL 查询
