@@ -34,6 +34,7 @@ public class JpaRepositoryTest extends BasePersonRepositoryTest {
 
         Person person2 = personRepository.saveAndFlush(person);
 
+        // 返回值是False
         System.out.println(person == person2);
     }
 
@@ -47,6 +48,7 @@ public class JpaRepositoryTest extends BasePersonRepositoryTest {
 
         Person person2 = personRepository.saveAndFlush(person);
 
+        // 返回值是True
         System.out.println(person == person2);
     }
 }
