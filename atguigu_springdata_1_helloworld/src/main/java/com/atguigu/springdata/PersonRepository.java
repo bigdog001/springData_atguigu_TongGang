@@ -19,7 +19,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      * 根据 lastName 来获取对应的 Person
      *
      * @param lastName
-     * @return
+     * @return Person对象，如果没有匹配记录，返回Null
      */
     Person getByLastName(String lastName);
 
@@ -28,7 +28,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      *
      * @param lastName
      * @param id
-     * @return
+     * @return Person数组，如果没有匹配的记录，则返回Empty而不是Null
      */
     List<Person> getByLastNameStartingWithAndIdLessThan(String lastName, Integer id);
 
@@ -37,14 +37,14 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      *
      * @param emails
      * @param birth
-     * @return
+     * @return Person数组，如果没有匹配的记录，则返回Empty而不是Null
      */
     List<Person> getByEmailInAndBirthLessThan(List<String> emails, Date birth);
 
     /**
      * 查询 id 值最大的那个 Person 使用 @Query 注解可以自定义 JPQL 语句以实现更灵活的查询
      *
-     * @return
+     * @return Person对象，如果没有匹配记录，返回Null
      */
     @Query("SELECT p FROM Person p WHERE p.id = (SELECT max(p2.id) FROM Person p2)")
     Person getMaxIdPerson();
@@ -54,7 +54,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      *
      * @param lastName
      * @param email
-     * @return
+     * @return Person数组，如果没有匹配的记录，则返回Empty而不是Null
      */
     @Query("SELECT p FROM Person p WHERE p.lastName = ?1 AND p.email = ?2")
     List<Person> testQueryAnnotationParams1(String lastName, String email);
@@ -64,7 +64,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      *
      * @param email
      * @param lastName
-     * @return
+     * @return Person数组，如果没有匹配的记录，则返回Empty而不是Null
      */
     @Query("SELECT p FROM Person p WHERE p.lastName = :lastName AND p.email = :email")
     List<Person> testQueryAnnotationParams2(@Param("email") String email, @Param("lastName") String lastName);
@@ -74,7 +74,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      *
      * @param lastName
      * @param email
-     * @return
+     * @return Person数组，如果没有匹配的记录，则返回Empty而不是Null
      */
     @Query("SELECT p FROM Person p WHERE p.lastName LIKE %?1% OR p.email LIKE %?2%")
     List<Person> testQueryAnnotationLikeParam(String lastName, String email);
@@ -85,7 +85,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
      *
      * @param email
      * @param lastName
-     * @return
+     * @return Person数组，如果没有匹配的记录，则返回Empty而不是Null
      */
     @Query("SELECT p FROM Person p WHERE p.lastName LIKE %:lastName% OR p.email LIKE %:email%")
     List<Person> testQueryAnnotationLikeParam2(@Param("email") String email, @Param("lastName") String lastName);
