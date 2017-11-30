@@ -6,6 +6,14 @@ import org.junit.Test;
 
 /**
  * Created by CYH on 2017/11/30 0030.
+ *
+ * Saving an entity can be performed via the CrudRepository.save(…) Method.
+ * It will persist or merge the given entity using the underlying JPA EntityManager.
+ * If the entity has not been persisted yet Spring Data JPA will save the entity
+ * via a call to the entityManager.persist(…) method,
+ * otherwise the entityManager.merge(…) method will be called.
+ *
+ * https://docs.spring.io/spring-data/jpa/docs/2.0.2.RELEASE/reference/html/#jpa.entity-persistence.saving-entites
  */
 public class PersonRepositoryUpdateTest extends BasePersonRepositoryTest {
 
